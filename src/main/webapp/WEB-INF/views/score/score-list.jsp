@@ -14,8 +14,8 @@
 
 <c:forEach var="score" items="${scores}">
 <p>
-# 학번: ${score.stuNum}, 이름: ${score.name}, 국어: ${score.kor}점, 영어: ${score.eng}점,
- 수학: ${score.math}점, 총점: ${score.total}점, 평균: ${score.average}점
+# 학번 : ${score.stuNum}, 이름 : ${score.name}, 국어 : ${score.kor}점, 영어 : ${score.eng}점,
+ 수학 : ${score.math}점, 총점 : ${score.total}점, 평균 : ${score.average}점, 학점 : ${score.grade}점
  &nbsp;
  <a href="/score/delete?stuNum=${score.stuNum}">[삭제]</a>
 </p>

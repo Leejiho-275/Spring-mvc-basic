@@ -1,5 +1,6 @@
 package com.spring.mvc.springweb.score.domain;
 
+import com.spring.mvc.springweb.domain.Grade;
 import lombok.*;
 
 // 학생 성적정보를 저장할 도메인 객체
@@ -19,6 +20,7 @@ public class Score {
     private int math;
     private int total;
     private double average;
+    private Grade Grade;
 
     public Score() {
         this.stuNum = ++sequence;
