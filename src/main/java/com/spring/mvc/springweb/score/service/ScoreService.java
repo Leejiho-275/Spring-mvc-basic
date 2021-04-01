@@ -3,6 +3,8 @@ package com.spring.mvc.springweb.score.service;
 import com.spring.mvc.springweb.domain.Grade;
 import com.spring.mvc.springweb.score.domain.Score;
 import com.spring.mvc.springweb.score.repository.ScoreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +14,8 @@ public class ScoreService {
 
     private final ScoreRepository scoreRepository;
 
-    public ScoreService(ScoreRepository scoreRepository) {
+    @Autowired
+    public ScoreService(@Qualifier("jdbcScoreRepo") ScoreRepository scoreRepository) {
         this.scoreRepository = scoreRepository;
     }
 

@@ -8,11 +8,15 @@
 <title>Insert title here</title>
 </head>
 <body>
+
 <c:if test="${articles.size() <= 0}">
 	<p>게시물이 존재하지 않습니다.</p>
 </c:if>
+
 <c:if test="${articles.size() > 0}">
+
 <h1>게시글 목록</h1>
+
 <table border="1">
 	<tr>
 		<td>번호</td>
@@ -26,26 +30,22 @@
 
 	<c:forEach var="article" items="${articles}">
 		<tr>
-			<td>1</td>
-			<td>고길동</td>
 			<td>${article.boardNo}</td>
 			<td>${article.writer}</td>
 			<td>
-				<a href="/board/content?boardNo=xxx">메롱메롱</a>
 				<a href="/board/content?boardNo=${article.boardNo}">${article.title}</a>
 			</td>
 			<td>
-				<a href="/board/delete?boardNo=xxx">[삭제]</a>
 				<a href="/board/delete?boardNo=${article.boardNo}">[삭제]</a>
 			</td>
 		</tr>
 	</c:forEach>
 
 </table>
+
 </c:if>
 
 <p>
-	<a href="/web/board/write">게시글 작성하기</a>
 	<a href="/board/write">게시글 작성하기</a>
 </p>
 
