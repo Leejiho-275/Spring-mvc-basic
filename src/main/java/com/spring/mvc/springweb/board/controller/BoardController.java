@@ -5,6 +5,7 @@ import com.spring.mvc.springweb.board.domain.ModifyBoard;
 import com.spring.mvc.springweb.board.repository.BoardRepository;
 import com.spring.mvc.springweb.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ public class BoardController {
     private final BoardRepository boardRepository;
 
     @Autowired
-    public BoardController(BoardService boardService, BoardRepository boardRepository) {
+    public BoardController(BoardService boardService, @Qualifier("templateBoardRepo") BoardRepository boardRepository) {
         this.boardService = boardService;
         this.boardRepository = boardRepository;
     }

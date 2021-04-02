@@ -1,5 +1,6 @@
-package com.spring.mvc.springweb.score.repository;
+package com.spring.mvc.springweb.board.repository;
 
+import com.spring.mvc.springweb.board.domain.Board;
 import com.spring.mvc.springweb.domain.Grade;
 import com.spring.mvc.springweb.score.domain.Score;
 import org.springframework.stereotype.Repository;
@@ -8,8 +9,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository("jdbcScoreRepo")
-public class JdbcScoreRepository implements ScoreRepository {
+@Repository("jdbcBoardRepo")
+public class JdbcBoardRepository implements BoardRepository {
 
     private String userId = "java_web1";
     private String userPw = "202104";
@@ -17,74 +18,29 @@ public class JdbcScoreRepository implements ScoreRepository {
     private String driverName = "oracle.jdbc.driver.OracleDriver"; // 드라이버 클래스 이름
 
     @Override
-    public void insertScore(Score score) {
+    public List<Board> getArticles() {
 
-        Connection connection = null;
-        try {
-            // 드라이버 클래스 로딩
-            Class.forName(driverName);
-
-            // DB 연결정보 생성
-            connection = DriverManager.getConnection(dbUrl, userId, userPw);
-
-            // SQL 작성
-            String sql = "INSERT INTO tbl_score "+"(stu_num, name, kor, eng, math, total, average)"+"VALUES(seq_score.nextval,?,?,?,?,?,?)";
-
-            // SQL을 실행할 객체 PreparedStatement 사용
-            PreparedStatement statement = connection.prepareStatement(sql);
-            // ? 값 채우기
-            statement.setString(1, score.getName());
-            statement.setInt(2, score.getKor());
-            statement.setInt(3, score.getEng());
-            statement.setInt(4, score.getMath());
-            statement.setInt(5, score.getTotal());
-            statement.setDouble(6, score.getAverage());
-
-            // sql 실행명령 (insert, update, delete) : executeUpdate()
-            statement.executeUpdate();
-            System.out.println("데이터 입력 성공");
-
-        } catch (Exception e) {
-            System.out.println("데이터 입력 실패");
-        } finally {
-            try {
-                // DB접속 해제
-                connection.close();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        }
-
-    }
-
-    @Override
-    public List<Score> sellectAllScores() {
-
-        List<Score> scoreList = new ArrayList<>();
+        List<Board> boardList = new ArrayList<>();
         Connection connection = null;
         try {
             Class.forName(driverName);
 
             connection = DriverManager.getConnection(dbUrl, userId, userPw);
 
-            String sql = "SELECT * FROM tbl_score";
+            String sql = "SELECT * FROM tbl_board";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
 
-                Score findScore = new Score(
-                        resultSet.getInt("stu_num"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("kor"),
-                        resultSet.getInt("eng"),
-                        resultSet.getInt("math"),
-                        resultSet.getInt("total"),
-                        resultSet.getDouble("average"),
-                        Grade.A
+                Board findBoard = new Board(
+                        resultSet.getInt("board_no"),
+                        resultSet.getString("writer"),
+                        resultSet.getString("title"),
+                        resultSet.getString("content")
                 );
 
-                scoreList.add(findScore);
+                boardList.add(findBoard);
             }
 
         } catch (Exception e) {
@@ -97,11 +53,49 @@ public class JdbcScoreRepository implements ScoreRepository {
             }
         }
 
-        return scoreList;
+        return boardList;
+
     }
 
     @Override
-    public Score selectOne(int stuNum) {
+    public void insertArticle(Board article) {
+        Connection connection = null;
+        try {
+            // 드라이버 클래스 로딩
+            Class.forName(driverName);
+
+            // DB 연결정보 생성
+            connection = DriverManager.getConnection(dbUrl, userId, userPw);
+
+            // SQL 작성
+            String sql = "INSERT INTO tbl_board "+"(board_no, writer, title, content) " + " VALUES(seq_score.nextval,?,?,?) ";
+
+            // SQL을 실행할 객체 PreparedStatement 사용
+            PreparedStatement statement = connection.prepareStatement(sql);
+            // ? 값 채우기
+
+            statement.setString(1, article.getWriter());
+            statement.setString(2, article.getTitle());
+            statement.setString(3, article.getContent());
+
+            // sql 실행명령 (insert, update, delete) : executeUpdate()
+            statement.executeUpdate();
+            System.out.println("input success");
+
+        } catch (Exception e) {
+            System.out.println("input fail");
+        } finally {
+            try {
+                // DB접속 해제
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void deleteArticle(int boardNo) {
 
         Connection connection = null;
         try {
@@ -112,30 +106,61 @@ public class JdbcScoreRepository implements ScoreRepository {
             connection = DriverManager.getConnection(dbUrl, userId, userPw);
 
             // SQL 작성
-            String sql = "SELECT * FROM tbl_score WHERE stu_num=?";
+            String sql = "DELETE FROM tbl_board WHERE board_no=?";
 
             // SQL을 실행할 객체 PreparedStatement 사용
             PreparedStatement statement = connection.prepareStatement(sql);
             // ? 값 채우기
-            statement.setInt(1, stuNum);
+            statement.setInt(1, boardNo);
+
+            // sql 실행명령 (insert, update, delete) : executeUpdate()
+            statement.executeUpdate();
+            System.out.println("delete success");
+
+        } catch (Exception e) {
+            System.out.println("delete fail");
+        } finally {
+            try {
+                // DB접속 해제
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
+
+    }
+
+    @Override
+    public Board getContent(int BoardNo) {
+
+        Connection connection = null;
+        try {
+            // 드라이버 클래스 로딩
+            Class.forName(driverName);
+
+            // DB 연결정보 생성
+            connection = DriverManager.getConnection(dbUrl, userId, userPw);
+
+            // SQL 작성
+            String sql = "SELECT * FROM tbl_board WHERE board_no=?";
+
+            // SQL을 실행할 객체 PreparedStatement 사용
+            PreparedStatement statement = connection.prepareStatement(sql);
+            // ? 값 채우기
+            statement.setInt(1, BoardNo);
 
             ResultSet resultSet = statement.executeQuery();
             // sql 실행명령 (insert, update, delete) : executeUpdate()
 
             if (resultSet.next()) {
 
-                return new Score(
-                        resultSet.getInt("stu_num"),
-                        resultSet.getString("name"),
-                        resultSet.getInt("kor"),
-                        resultSet.getInt("eng"),
-                        resultSet.getInt("math"),
-                        resultSet.getInt("total"),
-                        resultSet.getDouble("average"),
-                        Grade.A
+                return new Board(
+                        resultSet.getInt("board_no"),
+                        resultSet.getString("writer"),
+                        resultSet.getString("title"),
+                        resultSet.getString("content")
                 );
             }
-
             System.out.println("data print success");
 
         } catch (Exception e) {
@@ -149,12 +174,11 @@ public class JdbcScoreRepository implements ScoreRepository {
                 throwables.printStackTrace();
             }
         }
-
         return null;
     }
 
     @Override
-    public void deleteScore(int stuNum) {
+    public void modifyArticle(Board article) {
 
         Connection connection = null;
         try {
@@ -165,19 +189,23 @@ public class JdbcScoreRepository implements ScoreRepository {
             connection = DriverManager.getConnection(dbUrl, userId, userPw);
 
             // SQL 작성
-            String sql = "DELETE FROM tbl_score WHERE stu_num=?";
+            String sql = "UPDATE tbl_board SET writer=?, title=?, content=? WHERE board_no=?";
 
             // SQL을 실행할 객체 PreparedStatement 사용
             PreparedStatement statement = connection.prepareStatement(sql);
             // ? 값 채우기
-            statement.setInt(1, stuNum);
+            statement.setString(1, article.getWriter());
+            statement.setString(2, article.getTitle());
+            statement.setString(3, article.getContent());
+            statement.setInt(4, article.getBoardNo());
 
             // sql 실행명령 (insert, update, delete) : executeUpdate()
             statement.executeUpdate();
-            System.out.println("success");
+            System.out.println("modify success");
 
         } catch (Exception e) {
-            System.out.println("fail");
+            System.out.println("modify fail");
+            e.printStackTrace();
         } finally {
             try {
                 // DB접속 해제
@@ -186,5 +214,6 @@ public class JdbcScoreRepository implements ScoreRepository {
                 throwables.printStackTrace();
             }
         }
+
     }
 }
