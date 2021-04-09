@@ -31,7 +31,8 @@ public class ScoreService {
 
     // 점수를 조회한 후 컨트롤러에게 학점정보를 추가 리턴함
     public List<Score> addGradeService() {
-        List<Score> scoreList = scoreRepository.sellectAllScores();
+//        List<Score> scoreList = scoreRepository.sellectAllScores();
+        List<Score> scoreList = scoreMapper.selectAllScores();
 
         for (Score score : scoreList) {
             if (score.getAverage() > 90) {
