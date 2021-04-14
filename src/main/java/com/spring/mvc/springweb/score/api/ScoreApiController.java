@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin // CORS 정책을 해제
 @RestController
 @RequestMapping("/api/score/*")
 @RequiredArgsConstructor
